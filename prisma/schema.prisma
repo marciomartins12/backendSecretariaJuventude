@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Employee {
+  id           String   @id @default(cuid())
+  name         String
+  position     String
+  registration String   @unique
+  workDays     String   // JSON array: ["monday", "tuesday", ...]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relacionamento com registros de ponto
+  timeRecords TimeRecord[]
+
+  @@map("employees")
+}
+
+model TimeRecord {
+  id         String    @id @default(cuid())
+  employeeId String
+  date       DateTime  @db.Date
+  entryTime  String?   // HH:MM format
+  exitTime   String?   // HH:MM format
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relacionamento com funcionário
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  // Índice único para evitar múltiplos registros no mesmo dia
+  @@unique([employeeId, date])
+  @@map("time_records")
+}
