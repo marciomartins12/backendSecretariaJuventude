@@ -33,13 +33,16 @@ model Employee {
 }
 
 model TimeRecord {
-  id         String    @id @default(cuid())
+  id         String          @id @default(cuid())
   employeeId String
-  date       DateTime  @db.Date
-  entryTime  String?   // HH:MM format
-  exitTime   String?   // HH:MM format
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  date       DateTime        @db.Date
+  entryTime  String?         // HH:MM format
+  exitTime   String?         // HH:MM format
+  status     AttendanceStatus @default(PRESENT) // Status de presença
+  shift      ShiftType       @default(FULL_DAY) // Turno
+  observations String?       // Observações sobre faltas/atrasos
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
 
   // Relacionamento com funcionário
   employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
@@ -47,4 +50,15 @@ model TimeRecord {
   // Índice único para evitar múltiplos registros no mesmo dia
   @@unique([employeeId, date])
   @@map("time_records")
+}
+
+enum AttendanceStatus {
+  PRESENT     // Presente (trabalhou normalmente)
+  ABSENT      // Faltou (não apareceu)
+}
+
+enum ShiftType {
+  MORNING     // Manhã
+  AFTERNOON   // Tarde
+  FULL_DAY    // Dia inteiro
 }

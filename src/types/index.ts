@@ -14,8 +14,22 @@ export interface TimeRecord {
   date: string; // YYYY-MM-DD
   entryTime?: string; // HH:MM
   exitTime?: string; // HH:MM
+  status: AttendanceStatus;
+  shift: ShiftType;
+  observations?: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export enum AttendanceStatus {
+  PRESENT = 'PRESENT',
+  ABSENT = 'ABSENT'
+}
+
+export enum ShiftType {
+  MORNING = 'MORNING',
+  AFTERNOON = 'AFTERNOON', 
+  FULL_DAY = 'FULL_DAY'
 }
 
 export interface User {
@@ -55,4 +69,7 @@ export interface CreateTimeRecordRequest {
   date: string; // YYYY-MM-DD
   entryTime?: string; // HH:MM
   exitTime?: string; // HH:MM
+  status?: AttendanceStatus;
+  shift?: ShiftType;
+  observations?: string;
 }
