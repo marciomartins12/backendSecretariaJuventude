@@ -21,8 +21,8 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 app.use(cors({
   origin: [
-    'http://localhost:8081',
     'http://localhost:8080',
+    'http://localhost:8081',
     'http://localhost:5173',
     'http://localhost:3000',
     process.env.FRONTEND_URL || 'http://localhost:8081'
